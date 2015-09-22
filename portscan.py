@@ -8,6 +8,7 @@ from datetime import datetime
 OKGREEN = '\033[92m'
 FAIL = '\033[91m'
 ENDC = '\033[0m'
+ERROR = FAIL+"ERROR: "+ENDC
 
 def portScan(remoteServerIP, startPort, endPort):
 
@@ -30,15 +31,15 @@ def portScan(remoteServerIP, startPort, endPort):
             sock.close()
 
     except KeyboardInterrupt:
-        print "You pressed Ctrl+C"
+        print ERROR+"You pressed Ctrl+C"
         sys.exit()
 
     except socket.gaierror:
-        print 'Hostname could not be resolved. Exiting'
+        print ERROR+'Hostname could not be resolved. Exiting'
         sys.exit()
 
     except socket.error:
-        print "Couldn't connect to server"
+        print ERROR+"Couldn't connect to server"
         sys.exit()
 
     t2 = datetime.now()
@@ -65,7 +66,7 @@ def ipRange(start_ip, end_ip):
                 temp[i-1] += 1
           ip_range.append(".".join(map(str, temp)))
    else:
-       print(FAIL+"ERROR: "+ENDC+"First IP must be smaller than last IP")
+       print(ERROR+"First IP must be smaller than last IP")
        print_menu()
        sys.exit()
 
@@ -105,7 +106,7 @@ if __name__== "__main__":
             for single_ip in all_ip:
                 portScan(single_ip, startPort, endPort)
         else:
-            print(FAIL+"ERROR: "+ENDC+"Invalid argument!")
+            print(ERROR+"Invalid argument!")
             print_menu();
 
     except (IndexError):
