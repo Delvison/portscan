@@ -10,6 +10,7 @@ FAIL = '\033[91m'
 ENDC = '\033[0m'
 ERROR = FAIL+"ERROR: "+ENDC
 
+# Scans ports for a given IP from the start port to the end port
 def portScan(remoteServerIP, startPort, endPort):
 
     # Print a nice banner with information on which host we are about to scan
@@ -22,13 +23,16 @@ def portScan(remoteServerIP, startPort, endPort):
 
     try:
         for port in range(int(startPort),int(endPort)):
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            result = sock.connect_ex((remoteServerIP, port))
-            if result == 0:
-                print "Port "+OKGREEN+"{}: \t Open".format(port) + ENDC
-            # else:
-            #     print "Port {}: \t Closed".format(port)
-            sock.close()
+            if port < 65535 and port > 0:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                result = sock.connect_ex((remoteServerIP, port))
+                if result == 0:
+                    print "Port "+OKGREEN+"{}: \t Open".format(port) + ENDC
+                # else:
+                #     print "Port {}: \t Closed".format(port)
+                sock.close()
+            else:
+                print ERROR + "invalid port "+str(port)
 
     except KeyboardInterrupt:
         print ERROR+"You pressed Ctrl+C"
@@ -109,5 +113,5 @@ if __name__== "__main__":
             print(ERROR+"Invalid argument!")
             print_menu();
 
-    except (IndexError):
+    except (Exception):
         print_menu();
